@@ -211,8 +211,28 @@ Not feasible to replicate original paper settings using multiple large GPUs, so 
 start my dental imaging project! get ToothFairy raw images (dicom) running through omop2dicom python code
 create github repo https://github.com/jcha-hub/dental_imaging_project
 github desktop, clone repo, jcha-hub/dental_imaging_project, choose local path, clone
-then move local files to new folder created, then commit changes
+then move local files to new folder created, type text for summary, publish
 text of notes - G:\My Drive\Ai agents courses\NIDCR_imaging_project\dental_imaging_project
 G:\My Drive\Ai agents courses\NIDCR_imaging_project\dental_imaging_project
 https://github.com/jcha-hub/dental_imaging_project
+copy https://github.com/paulnagy/DICOM2OMOPn by downloading zip file, paste into local folder, commit change
+
+move just 4 pt folders into local machine from Tooth Fairy raw dataset (33 GB)
+uv in vscode for jupyter notebook files using requirements.txt 
+(base) PS C:\Users\julie\AI agent courses\dental_imaging_project_local\DICOM2OMOP>
+uv venv dicom2omop_env --python 3.10
+conda deactivate
+(dicom2omop_env) PS C:\Users\julie\AI agent courses\dental_imaging_project_local\DICOM2OMOP> 
+uv pip install -r requirements.txt  #do not use
+uv pip install ipykernel pandas pyarrow pyodbc requests urllib3 azure-identity   #direct packages only as needed
+#to avoid pathlib , pyodbc possible issues
+link to jupyter notebook 
+uv pip install ipykernel  , then open notebook, select kernel, select another kernel, choose your venv, ctrl-shift-p
+
+prevent github desktop from upload so many .dcm files
+create new file in project called .gitignore
+open file, type in 
+# Ignore all DICOM images
+data/
+*.dcm
 
