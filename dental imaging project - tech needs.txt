@@ -1,0 +1,218 @@
+2/18/26
+
+Dental Imaging project - technical resources requests
+
+
+What are you trying to accomplish?
+	Pilot feasibility of using dental CBCT imaging data with the OHDSI Medical Imaging Extention.
+		- Convert dental CBCT DICOM files (ToothFairy) into features in the OMOP image_occurrence table
+        - Use pretrained segmentation model DentalSegmentator and tooth-level model ToothSeg on a second CBCT dataset MMDental (NIfTI format with medical records csv). 
+		Limited annotations (20-30) will be done on 3D slicer on the local laptop for limited fine tuning of the ToothSeg model on the MMDental dataset. 
+		AI extracted clinical features of missing teeth and impacted wisdom teeth will be used to populate the OMOP image_feature table.
+		- Compare AI extracted features with clinical ground truth from medical records csv file from MMDental dataset
+	Project impact - Proof of concept to determine if dental imaging can be standardized with modifications of the existing OHDSI medical imaging
+	extension. Identify the gaps in OMOP dental terminiology and imaging vocabulary that need to be addressed to enable future multi-modal, multi-site research
+	integrating dental imaging with EHR data. 
+	
+What do you need from the cloud?
+	On GCP:
+	1) n2-standard-8			(8 vCPU, 32 GB RAM, no GPU)							CPU for data preprocessing and file operations 
+	2) g2-standard-16			(16 vCPU, 64 GB RAM, NVIDIA L4 24GB VRAM)			GPU for model inferecne and fine tuning
+	4) Linux environment - ToothSeg model runs in linux only, request Ubuntu 22.04 LTS
+	5) Python environment  - Python 3.10+
+	
+	I will switch between instances based on task to optimize costs. 
+
+Is this for a new project, or do you already have cloud resources set up?
+	This is for a new project.
+	
+What's your timeline? When do you need this up and running?
+	Ideally, to have cloud environment set up by early March, and request for local resources on my laptop to be approved sooner if possible to
+	allow start of project. Goal is to complete project by end of May 2026.
+	
+Have you worked with cloud platforms before, or is this new territory for your team?
+	Yes, basic familiarity but would appreciate guide on GCP specific setup and cost optimization.
+	
+At a high level, what does your infrastructure need to support? Data storage, compute resources, networking?
+	Compute - GPU enabled VM for inference and fine tuning, on dental CBCT images 
+	Storage - 300 GB persistent storage
+	Networking - outbound internet for downloading files from models and datasets from approved sources only
+	Data Transfer - ability to move files to/from local laptop 
+	
+Do you know what cloud services you will be using? VMs, containers, serverless, databases, storage?
+	Compute Engine VM - AI model inference and fine tuning, Ubuntu 22.04 LTS with Nvidia GPU
+	Persistent Disk - 300 GB SSD
+	Cloud Storage - 50 GB (general transfer needs, including uploading annotation files from local)
+	
+Where is your data coming from? External APIs, on-prem databases, research instruments, other sources?
+	All data sources are publicly available research datasets with appropriate licenses.
+
+	Software
+		1)3D Slicer 5.10 for windows (local only)
+			https://download.slicer.org/
+			requires network access to slicer.kitware.com for extension installation
+			extension needed: DentalSegmentator (automated dental CBCT segmentation)
+		2) VS Code with Remote-SSH extension on local laptop + SSH access (port 22) to GCP VM
+			alternative: VS Code on local machine and JupyterLab on VM
+		3) Python 
+			network access to download standard packages: pypi.org, files.pythonhosted.org, conda.anaconda.org, download.pytorch.org
+		4) personal github creation
+
+	Datasets / code- 
+		1) ToothFairy - DICOM dental CBCT
+			(paper) https://ieeexplore.ieee.org/document/9879649     https://ieeexplore.ieee.org/document/10816445
+			https://ditto.ing.unimore.it/toothfairy/
+		2) ToothFairy2 - benchmark dataset for ToothSeg model (not DICOM)
+			(paper) https://ieeexplore.ieee.org/document/11093634
+			https://ditto.ing.unimore.it/toothfairy2/
+		3) MMDental dataset	
+			(paper) https://www.nature.com/articles/s41597-025-05398-7
+			https://springernature.figshare.com/articles/dataset/MMDental_-_A_multimodal_dataset_of_tooth_CBCT_images_with_expert_medical_records/28505276?file=53187695
+		4) code from Park et. al : incorporating DICOM into OMOP DCM in OHDSI medical imaging extension
+			(paper) https://pubmed.ncbi.nlm.nih.gov/40680297/
+			https://github.com/paulnagy/DICOM2OMOP/
+
+	Models-
+		1) DentalSegmentator code and model weights, along with extension to 3DSlicer
+			(paper) https://www.sciencedirect.com/science/article/pii/S0300571224002999?via%3Dihub
+			https://github.com/gaudot/SlicerDentalSegmentator
+			https://zenodo.org/records/10829675
+		2) ToothSeg code and model weights
+			(paper) https://pubmed.ncbi.nlm.nih.gov/41477803/
+			https://github.com/MIC-DKFZ/ToothSeg
+			https://zenodo.org/records/14893540
+		3) nnU-Net    needed for both models
+			https://github.com/MIC-DKFZ/nnUNet/tree/master
+		
+	Network Allowlist
+		pypi.org, files.pythonhosted.org, conda.anaconda.org, download.pytorch.org	(python packages)
+		github.com																	(code repositories)
+		zenodo.org																	(model weights)
+		ditto.ing.unimore.it														(ToothFairy and ToothFairy2 datasets)
+		springernature.figshare.com													(MMDental Dataset)
+		slicer.kitware.com															(for local installation of 3D Slicer extension of DentalSegmentator)
+	
+How much data are we talking about? Current size and expected growth?
+	request 400 GB cloud storage, may request increase to 500 GB if storage needs exceed preliminary estimate
+	
+	Storage Estimate  
+	ToothFairy dataset				50  GB
+	ToothFairy2 dataset				40  GB
+	MMDental dataset				65  GB
+	DentalSegmentator model			1   GB
+	ToothSeg model					1   GB
+	Image preprocessing				100 GB
+	Model outputs					60  GB
+	Model checkpoints				10 GB
+	Working space					---
+	
+	Requested Storage				400 GB
+	
+Do you need to move data between cloud and NIH internal network?
+	Yes, for cost optimization as much as possible of the project will be done on my local machine, except running AI models for inference and fine tuning training.
+	
+Do you anticipate needing specialized compute like GPUs, high memory instances, or HPC?
+
+**INCORRECT - need to recalculate for A100 80 GB (likely), might be possible on A100 40 GB) due to large size of ToothSeg model complexity with patch size
+and batch size requiremnts,  and MMDental CBCT voxel spacing 
+	Estimated GPU requirements
+	Task											Dataset 					GPU			Time			Purpose	
+	data setup and general coding												CPU only	75
+	
+	
+	DentalSegmentator model inference 				(~400 volumes)				L4			~75 hours
+	ToothSeg validation								(10 volumes)				L4			~5 hr			Verify pretrained model installation works, by running against benchmark dataset
+	ToothSeg zero-shot model inference				(~50 volumes)				L4			~8 hours        See if model can generalize, without fine tuning
+	ToothSeg model fine-tuning 						(20-30 volumes)				L4			~10 hours		Fine tune model on dataset, to improve performance
+	ToothSeg model inference post fine tune			(~400 volumes)				L4			~50 hours
+
+Do you have an existing architecture design or technical design?
+	For cost optimization, do as much code development as possible on the local laptop, including manual annotating of a subset of the dental CBCT images in the MMDental dataset in 3D Slicer prior to 
+	fine tuning of the ToothSeg model. Try zero shot model inference beforehand, and only fine tune if performance is not sufficiently generalized to a new dataset. The DentalSegmentator model already 
+	generalizes well per literature review.
+	Cloud used for large scale file processing, model inference, and model fine tuning.
+	Transfer files to the local laptop for analysis.
+	
+**INCORRECT - need to recalculate for A100 80 GB (likely) might be possible on A100 40 GB) for fine tuning due to large size of ToothSeg model complexity with patch size
+and batch size requiremnts,  and MMDental CBCT voxel voxel spacing and field of view
+**Use L4 GPU for code startup and inference, by downsampling images and making code mods. 
+Not feasible to replicate original paper settings using multiple large GPUs, so budget additional time for code mods
+**Also need to compare GCP vs AWS cost, with actual NIH pricing rates ideally, along with verifying storage space allocation types
+** Take advantage of spot pricing for GPUs if available to reduce costs significantly. 
+	
+	GCP cost estimate on 2/18/26 from general website (unable to access NIH pricing)
+		https://cloud.google.com/products/calculator
+
+		VM #1: CPU-only (n2-standard-8) -> $13.94 /month
+		Field					Value
+		Service					Compute Engine
+		Service Type			Instances
+		Number of instances		1
+		Usage 					14 hours per month
+		Operating System		Free: Debian, CentOS, CoreOS, Ubuntu or BYOL (Bring Your Own License)
+		Provisioning Model		Regular
+		Machine Family			general purpose
+		Series					N2
+		Machine type			n2-standard-8
+		vCPU					8
+		RAM 					32 GB
+		Boot disk type			SSD persistent disk
+		Boot disk size			50 GB
+		GPU Type				none		
+		Region					us-east4 (or your preferred region)
+
+
+		VM #2: L4 GPU (g2-standard-16) -> $57.37/month
+		Field					Value
+		Service					Compute Engine
+		Service Type			Instances
+		Number of instances		1	
+		Usage					42 hours per month
+		Operating System		Free: Debian, CentOS, CoreOS, Ubuntu or BYOL (Bring Your Own License)
+		Provisioning Model		Regular
+		Machine Family			Accelerator-optimized
+		Series					G2
+		Machine type			g2-standard-16
+		vCPU					16
+		RAM						64 GB
+		Boot disk type			SSD persistent disk
+		Boot disk size			50 GB 
+		GPU Type				Nvidia L4 (included)
+		Region					us-east4
+		
+
+		#3: SSD Persistent Disk (400 GB)   
+		Field					Value
+		Service					Compute Engine -> Persistent Disk
+		Disk type				SSD persistent disk
+		Storage					400 GB
+		Region					us-east4
+
+		#4: Cloud Storage Bucket (50 GB)
+		Field									Value
+		Service									Cloud Storage
+		Location Type							Region
+		Location								us-east4
+		Storage class							Standard
+		Total amount of storage					50 GB
+		Data Transfer within Google Cloud		0 GB
+		
+	
+	
+	Resource						Tasks							Total hours      Hours/Month 	Rate		Monthly Cost		3-month Total cost
+	VM n2-standard-8 (CPU)			general 						~40 				~14
+	VM g2-standard-16 + L4			model inferece/fine tuning		~125				~42
+	400 GB SSD persistent disk		storage							-					-
+	50 GB Cloude Storage			storage							-					-
+
+	Total Estimated Cost on GCP (general website):
+	
+#3/17/26 
+start my dental imaging project! get ToothFairy raw images (dicom) running through omop2dicom python code
+create github repo https://github.com/jcha-hub/dental_imaging_project
+github desktop, clone repo, jcha-hub/dental_imaging_project, choose local path, clone
+then move local files to new folder created, then commit changes
+text of notes - G:\My Drive\Ai agents courses\NIDCR_imaging_project\dental_imaging_project
+G:\My Drive\Ai agents courses\NIDCR_imaging_project\dental_imaging_project
+https://github.com/jcha-hub/dental_imaging_project
+
