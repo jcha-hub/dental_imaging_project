@@ -224,10 +224,10 @@ uv venv dicom2omop_env --python 3.10
 conda deactivate
 (dicom2omop_env) PS C:\Users\julie\AI agent courses\dental_imaging_project_local\DICOM2OMOP> 
 uv pip install -r requirements.txt  #do not use
-uv pip install ipykernel pandas pyarrow pyodbc requests urllib3 azure-identity   #direct packages only as needed
+uv pip install ipykernel pandas pyarrow pyodbc requests urllib3 azure-identity pydicom  #direct packages only as needed
 #to avoid pathlib , pyodbc possible issues
 link to jupyter notebook 
-uv pip install ipykernel  , then open notebook, select kernel, select another kernel, choose your venv, ctrl-shift-p
+uv pip install ipykernel  , then open notebook, select kernel, select another kernel, choose your venv, ctrl-shift-p for dev reload
 
 prevent github desktop from upload so many .dcm files
 create new file in project called .gitignore
@@ -236,3 +236,34 @@ open file, type in
 data/
 *.dcm
 
+#create a venv only using conda and not uv which is not on nidcr computer - avoid pyodbc until ready to connect to 
+#NIDCR Azure database, you must ensure the Microsoft ODBC Driver for SQL Server is installed at the Windows OS level.
+#pyarrow makes .parquest files , faster than .csv files
+conda create --name conda_dicom2omop_env python=3.10 -y
+conda activate dicom2omop_env
+conda install -c conda-forge ipykernel pandas pydicom pyarrow matplotlib -y
+python -m ipykernel install --user --name=conda_dicom2omop_env --display-name "conda_dicom2omop_env"
+
+Segmenting the Inferior Alveolar Canal in CBCTs Volumes: the ToothFairy Challenge
+https://federicobolelli.it/media/publications/pdfs/2024tmi.pdf
+This section presents the ToothFairy dataset that accompanies the challenge, providing a comprehensive overview of the
+data acquisition process and the annotation steps.
+Data Sources. The training data was acquired by the Affidea Center, a pan-European healthcare group located in Modena
+that specializes in advanced diagnostics, laboratory analyses,rehabilitation, and cancer diagnosis and treatment. The scans
+were obtained by means of Cone Beam Computed Tomography (CBCT) via a NewTom/NTVGiMK4, operating at 3 mA,
+110 kV, and offering 0.3 mm cubic voxels. The test data originates from the Department of Oral and Maxillofacial Surgery at
+Radboud University Medical Centre, Nijmegen,obtained using a standard CBCT scanning protocol with the
+i-CAT 3D Imaging System. The scans were performed in “Extended Field” mode, with a field of view (FOV) measuring
+16 cm in diameter and 22 cm in height. The scanning process involved two scans of 20 seconds each, resulting in a voxel size of 0.4 mm.
+
+nidcr laptop
+check anaconda download: start menu: search anaconda prompt -> type in conda --version, see that I have it conda 26.1.1
+vscode -> extensions, download python and jupyter from microsoft
+cd to project folder
+conda create --prefix ./dicom2omop)_env python=3.10 -y   #to make my in my project folder\
+		conda env remove --name dicom2omop   to delete from my accidental location in users/chaj3/.conda/env/dicom2omop
+in anaconda prompt:
+conda create --name dicom2omop_env python=3.10
+conda activate entire path + dicom2omop_env
+conda install -c conda-forge pydicom pandas ipykernel matplotlib -y
+python -m ipykernel install --user --name "C:\Users\chaj3\Imaging_Project\dicom2omop_env" --display-name "dicom2omop"
