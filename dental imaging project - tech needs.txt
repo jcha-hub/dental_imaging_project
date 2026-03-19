@@ -267,3 +267,39 @@ conda create --name dicom2omop_env python=3.10
 conda activate entire path + dicom2omop_env
 conda install -c conda-forge pydicom pandas ipykernel matplotlib -y
 python -m ipykernel install --user --name "C:\Users\chaj3\Imaging_Project\dicom2omop_env" --display-name "dicom2omop"
+
+#3/18/26
+postpone EDA scaleup to full dataset to work on SQLite and OMOP vocab setup
+planning by claude  - NIDCR_Local_SQlite_Setup_Guide.md
+Outline of steps
+# 1. Clone repo
+git clone https://github.com/paulnagy/DICOM2OMOP.git
+
+# 2. Set up environment
+	conda create -n dicom2omop python=3.10 -y && conda activate dicom2omop
+	pip install pandas pydicom sqlalchemy jupyter
+
+# 3. Create OMOP database
+	python setup_omop_sqlite.py
+	create OMOP db in SQlite: vscode terminal to folder with .ipynb file
+    cd "C:\Users\julie\AI agent courses\dental_imaging_project_local\DICOM2OMOP\julie_project"
+    jupyter nbconvert --to notebook --execute --inplace setup_omop_sqlite.ipynb
+# 4. Load DICOM vocabulary concepts from repo
+python load_dicom_concepts.py "DICOM2OMOP/files/OMOP CDM Staging/omop_table_staging_v3.csv"
+
+# 5. Add standard clinical concepts
+python add_standard_concepts.py
+
+# 6. Run full ETL pipeline on ToothFairy DICOMs
+python toothfairy_dicom_to_omop.py /path/to/toothfairy/dicom/
+
+# 7. Query and demo
+python query_omop_demo.py
+
+# 8. Vocabulary analysis (for the "missingness" story)
+python vocab_mapping_analysis.py
+
+
+
+add packages: !pip install sqlalchemy jupyter notebook
+set terminal to env and select kernel: dicom2omop_env/Scripts/activate

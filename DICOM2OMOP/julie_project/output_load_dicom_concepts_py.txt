@@ -1,0 +1,73 @@
+(dicom2omop_env) PS C:\Users\julie\AI agent courses\dental_imaging_project_local\DICOM2OMOP\julie_project> python load_dicom_concepts.py 
+Cleared concept table: deleted 8811 existing rows
+
+Processing: C:\Users\julie\AI agent courses\dental_imaging_project_local\DICOM2OMOP\files\OMOP CDM Staging\omop_table_staging_v5.csv
+Loaded 8811 rows from staging CSV
+Columns: ['concept_id', 'concept_name', 'domain_id', 'vocabulary_id', 'concept_class_id', 'standard_concept', 'concept_code', 'valid_start_date', 'valid_end_date', 'invalid_reason']
+
+Sample rows:
+   concept_id            concept_name    domain_id vocabulary_id  concept_class_id  standard_concept concept_code  valid_start_date  valid_end_date  invalid_reason
+0  2128000010           Length to End  Measurement         DICOM  DICOM Attributes               NaN     00080001          19930101        20991231             NaN
+1  2128000011  Specific Character Set  Measurement         DICOM  DICOM Attributes               NaN     00080005          19930101        20991231             NaN
+2  2128000012  Language Code Sequence  Measurement         DICOM  DICOM Attributes               NaN     00080006          19930101        20991231             NaN
+
+--- Staging File Summary ---
+Vocabularies: ['DICOM']
+Domains: ['Measurement']
+Concept classes: {'DICOM Attributes': 5183, 'DICOM Value Sets': 3628}
+
+--- SQLite concept table schema ---
+ cid             name    type  notnull dflt_value  pk
+   0       concept_id INTEGER        0       None   1
+   1     concept_name    TEXT        1       None   0
+   2        domain_id    TEXT        1       None   0
+   3    vocabulary_id    TEXT        1       None   0
+   4 concept_class_id    TEXT        1       None   0
+   5 standard_concept    TEXT        0       None   0
+   6     concept_code    TEXT        1       None   0
+   7 valid_start_date    TEXT        1       None   0
+   8   valid_end_date    TEXT        1       None   0
+   9   invalid_reason    TEXT        0       None   0
+
+--- DataFrame dtypes after cleanup ---
+concept_id                   int64
+concept_name        string[python]
+domain_id           string[python]
+vocabulary_id       string[python]
+concept_class_id    string[python]
+standard_concept    string[python]
+concept_code        string[python]
+valid_start_date            object
+valid_end_date              object
+invalid_reason      string[python]
+dtype: object
+
+Rows remaining for insert: 8811
+✓ 8811 total concepts now in OMOP concept table
+Finished: omop_table_staging_v5.csv
+   COUNT(*)
+0      8811
+   concept_id                concept_name    domain_id vocabulary_id  ... concept_code valid_start_date valid_end_date invalid_reason
+0  2128000010               Length to End  Measurement         DICOM  ...     00080001       1993-01-01     2099-12-31           
+None
+1  2128000011      Specific Character Set  Measurement         DICOM  ...     00080005       1993-01-01     2099-12-31           
+None
+2  2128000012      Language Code Sequence  Measurement         DICOM  ...     00080006       1993-01-01     2099-12-31           
+None
+3  2128000013                  Image Type  Measurement         DICOM  ...     00080008       1993-01-01     2099-12-31           
+None
+4  2128000014            Recognition Code  Measurement         DICOM  ...     00080010       1993-01-01     2099-12-31           
+None
+5  2128000015      Instance Creation Date  Measurement         DICOM  ...     00080012       1993-01-01     2099-12-31           
+None
+6  2128000016      Instance Creation Time  Measurement         DICOM  ...     00080013       1993-01-01     2099-12-31           
+None
+7  2128000017        Instance Creator UID  Measurement         DICOM  ...     00080014       1993-01-01     2099-12-31           
+None
+8  2128000018  Instance Coercion DateTime  Measurement         DICOM  ...     00080015       1993-01-01     2099-12-31           
+None
+9  2128000019               SOP Class UID  Measurement         DICOM  ...     00080016       1993-01-01     2099-12-31           
+None
+
+[10 rows x 10 columns]
+(dicom2omop_env) PS C:\Users\julie\AI agent courses\dental_imaging_project_local\DICOM2OMOP\julie_project> 
